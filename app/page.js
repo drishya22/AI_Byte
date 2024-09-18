@@ -1,17 +1,32 @@
 "use client";
-import { Box, Stack, TextField, Button } from "@mui/material";
-import Image from "next/image";
+
+import { Box, Button, Stack, TextField } from "@mui/material";
 import { useState } from "react";
 
 export default function Home() {
   const [messages, setMessages] = useState([
     {
       role: "assistant",
-      content: `Hi I'm a Smart AI Assistant, how can I assist you today?`,
+      content: "Hi I'm a Smart AI Assistant, how can I assist you today?",
     },
   ]);
-
   const [message, setMessage] = useState("");
+
+  const sendMessage = async () => {
+    setMessage[""];
+    setMessages((messages) => [
+      ...messages,
+      { role: "user", content: message },
+      { role: "assistant", content: "" },
+    ]);
+    const response = fetch("/api/chat", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify([...messages, { role: "user", content: message }]),
+    });
+  };
 
   return (
     <Box
@@ -25,7 +40,7 @@ export default function Home() {
       <Stack
         direction={"column"}
         width="500px"
-        height="700px"
+        height="600px"
         border="1px solid black"
         p={2}
         spacing={3}
@@ -60,14 +75,16 @@ export default function Home() {
             </Box>
           ))}
         </Stack>
-        <Stack direction="row" spacing={2}>
+        <Stack direction={"row"} spacing={2}>
           <TextField
-            fullwidth="true"
             label="Message"
+            fullWidth
             value={message}
             onChange={(e) => setMessage(e.target.value)}
           />
-          <Button variant="contained">Send</Button>
+          <Button variant="contained" onClick={sendMessage}>
+            Send
+          </Button>
         </Stack>
       </Stack>
     </Box>
